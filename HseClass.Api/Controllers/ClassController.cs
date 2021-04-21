@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HseClass.Api.Helpers;
 using HseClass.Api.ViewModels;
+using HseClass.Core.Guard;
 using HseClass.Data.Entities;
 using HseClass.Data.IRepositories;
 using Microsoft.AspNetCore.Authorization;
@@ -19,15 +20,18 @@ namespace HseClass.Api.Controllers
         private readonly IClassRepository _classRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserClassRepository _userClass;
+        private readonly UserManager<User> _userManager;
         
         public ClassController( 
             IClassRepository classRepository,
             IUserRepository userRepository,
-            IUserClassRepository userClass)
+            IUserClassRepository userClass,
+            UserManager<User> userManager)
         {
             _classRepository = classRepository;
             _userRepository = userRepository;
             _userClass = userClass;
+            _userManager = userManager;
         }
         
         /// <summary>
@@ -100,6 +104,31 @@ namespace HseClass.Api.Controllers
             try
             {
                 await _classRepository.Delete(classId);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+        
+        /// <summary>
+        /// Добавление пользователя в класс
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{classId}/user/{addedUserEmail}")]
+        public async Task<ActionResult<bool>> AddStudent(int classId, string addedUserEmail)
+        {
+            var user = await _userRepository.GetById(this.GetUserIdFromToken());
+            await this.CheckUserInClass(user, classId);
+
+            var addedUser = await _userManager.FindByEmailAsync(addedUserEmail);
+            Ensure.IsNotNull(addedUser, nameof(_userManager.FindByEmailAsync));
+
+            try
+            {
+                await _userClass.Create(classId, addedUser.Id);
             }
             catch
             {
