@@ -73,7 +73,7 @@ namespace HseClass.Api.Controllers
                     form.Email,
                     form.Password,
                     form.Name, 
-                    RoleEnums.Student));
+                    RoleEnums.Teacher));
             }
             catch (Exception e)
             {
