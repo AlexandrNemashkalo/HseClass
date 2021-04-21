@@ -6,14 +6,14 @@ namespace HseClass.Data.IRepositories
 {
     public interface IClassRepository
     {
-        Task<Class> Create(Class cl);
+        Task<Team> Create(Team cl);
 
         Task Delete(int classId);
 
-        Task<List<Class>> GetByUserId(int userId);
+        Task<List<Team>> GetByUserId(int userId);
         
-        Task<Class> GetById(int classId);
+        Task<Team> GetById(int classId);
 
-        Task<Class> Update(Class cl);
+        Task<Team> Update(Team cl);
     }
 }

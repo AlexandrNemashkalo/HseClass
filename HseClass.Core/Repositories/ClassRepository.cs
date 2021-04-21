@@ -17,7 +17,7 @@ namespace HseClass.Core.Repositories
             _context = context;
         }
         
-        public async Task<Class> Create(Class cl)
+        public async Task<Team> Create(Team cl)
         {
             var result = await _context.Classes.AddAsync(cl);
             await _context.SaveChangesAsync();
@@ -32,12 +32,12 @@ namespace HseClass.Core.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Class>> GetByUserId(int userId)
+        public async Task<List<Team>> GetByUserId(int userId)
         {
             var query =
                 from c in _context.Classes 
-                join p in _context.UserClasses
-                    on c.Id equals p.ClassId
+                join p in _context.UserTeams
+                    on c.Id equals p.TeamId
                 join u in _context.Users
                     on p.UserId equals u.Id
                 where p.UserId == userId
@@ -46,7 +46,7 @@ namespace HseClass.Core.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task<Class> GetById(int classId)
+        public async Task<Team> GetById(int classId)
         {
             return await _context.Classes
                 .Include(c => c.Labs)
@@ -54,7 +54,7 @@ namespace HseClass.Core.Repositories
                 .FirstOrDefaultAsync(c => c.Id == classId);
         }
 
-        public async Task<Class> Update(Class cl)
+        public async Task<Team> Update(Team cl)
         {
             var result = _context.Classes.Update(cl);
             await _context.SaveChangesAsync();

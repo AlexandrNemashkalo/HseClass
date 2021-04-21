@@ -48,14 +48,15 @@ namespace HseClass.Core.Jwt
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Key"]));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                //var expires = DateTime.Now.AddMinutes(Convert.ToDouble(600));
+                var expires = DateTime.Now.AddMinutes(Convert.ToDouble(600));
                 //var dateTimeOffset = new DateTimeOffset(expires);
 
                 var token = new JwtSecurityToken(
                     _configuration["Issuer"],
                     _configuration["Audience"],
                     claimsIdentity.Claims,
-                    signingCredentials: creds
+                    signingCredentials: creds,
+                    expires:expires
                 );
 
                 return new JwtSecurityTokenHandler().WriteToken(token);

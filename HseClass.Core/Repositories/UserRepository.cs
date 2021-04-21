@@ -24,11 +24,11 @@ namespace HseClass.Core.Repositories
         {
             var query =
                 from c in _context.Users 
-                join p in _context.UserClasses
-                    on c.Id equals p.ClassId
+                join p in _context.UserTeams
+                    on c.Id equals p.TeamId
                 join u in _context.Classes
                     on p.UserId equals u.Id
-                where p.ClassId == classId
+                where p.TeamId == classId
                 select c;
 
             return await query.ToListAsync();

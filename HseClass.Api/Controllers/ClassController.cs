@@ -35,7 +35,7 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<List<Class>>> Get()
+        public async Task<ActionResult<List<Team>>> Get()
         {
             return await _classRepository.GetByUserId(this.GetUserIdFromToken());
         }
@@ -45,7 +45,7 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{classId}")]
-        public async Task<ActionResult<List<Class>>> Get(int classId)
+        public async Task<ActionResult<List<Team>>> Get(int classId)
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             await this.CheckUserInClass(user, classId);
@@ -58,9 +58,9 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<Class>> Post([FromBody] ClassForm form)
+        public async Task<ActionResult<Team>> Post([FromBody] ClassForm form)
         {
-            var cl = await _classRepository.Create(new Class()
+            var cl = await _classRepository.Create(new Team()
             {
                 Title = form.Title
             });
@@ -75,7 +75,7 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("{classId}")]
-        public async Task<ActionResult<Class>> Put([FromBody] ClassForm form, [FromRoute] int classId)
+        public async Task<ActionResult<Team>> Put([FromBody] ClassForm form, [FromRoute] int classId)
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             await this.CheckUserInClass(user, classId);

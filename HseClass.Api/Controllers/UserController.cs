@@ -40,7 +40,7 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("class")]
-        public async Task<ActionResult<List<Class>>> Get()
+        public async Task<ActionResult<List<Team>>> Get()
         {
             return await _classRepository.GetByUserId(this.GetUserIdFromToken());
         }
@@ -50,7 +50,7 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("class/{classId}")]
-        public async Task<ActionResult<List<Class>>> Get(int classId)
+        public async Task<ActionResult<List<Team>>> Get(int classId)
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             await this.CheckUserInClass(user, classId);
@@ -67,7 +67,7 @@ namespace HseClass.Api.Controllers
         {
             var lab = await _labRepository.GetById(labId);
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
-            await this.CheckUserInClass(user, lab.ClassId);
+            await this.CheckUserInClass(user, lab.TeamId);
 
             var userLab = await _userLab.GetById(user.Id, labId);
             Ensure.IsNotNull(userLab, nameof(_userLab.GetById));

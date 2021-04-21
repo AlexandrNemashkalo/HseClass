@@ -2,11 +2,11 @@
 
 namespace HseClass.Data.Entities
 {
-    public class UserClass
+    public class UserTeam
     {
         public int UserId { get; set; }
         
-        public int ClassId { get; set; }
+        public int TeamId { get; set; }
         
     }
 }

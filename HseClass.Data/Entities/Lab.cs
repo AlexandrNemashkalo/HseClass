@@ -9,7 +9,7 @@ namespace HseClass.Data.Entities
         
         public string Task { get; set; }
 
-        public int ClassId { get; set; }
+        public int TeamId { get; set; }
         
         public DateTime Deadline { get; set; }
     }

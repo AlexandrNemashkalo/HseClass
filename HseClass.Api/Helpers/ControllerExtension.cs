@@ -27,7 +27,7 @@ namespace HseClass.Api.Helpers
         
         internal static async Task CheckUserInClass(this ControllerBase apiController, User user, int classId)
         {
-            if (!user.UserClasses.Any(uc => uc.ClassId == classId))
+            if (!user.UserClasses.Any(uc => uc.TeamId == classId))
             {
                 throw new Exception("ошибка доступа");
             }

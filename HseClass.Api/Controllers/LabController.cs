@@ -9,6 +9,7 @@ using HseClass.Data.Entities;
 using HseClass.Data.Enums;
 using HseClass.Data.IRepositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HseClass.Api.Controllers
@@ -20,15 +21,18 @@ namespace HseClass.Api.Controllers
         private readonly ILabRepository _labRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserLabRepository _userLab;
+        private readonly UserManager<User> _userManager;
         
         public LabController( 
             ILabRepository labRepository,
             IUserRepository userRepository,
-            IUserLabRepository userLab)
+            IUserLabRepository userLab,
+            UserManager<User> userManager)
         {
             _labRepository = labRepository;
             _userRepository = userRepository;
             _userLab = userLab;
+            _userManager = userManager;
         }
         
         /// <summary>
@@ -45,12 +49,17 @@ namespace HseClass.Api.Controllers
             {
                 Task = form.Task,
                 Deadline = form.Deadline,
-                ClassId = form.ClassId
+                TeamId = form.ClassId
             });
 
             var usersInClass = await _userRepository.GetByClassId(form.ClassId);
             foreach (var us in usersInClass)
             {
+                if (await _userManager.IsInRoleAsync(user, "teacher"))
+                {
+                    continue;
+                }
+                
                 await _userLab.Create(new UserLab()
                 {
                     UserId = us.Id,
@@ -90,7 +99,7 @@ namespace HseClass.Api.Controllers
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             var lab = await _labRepository.GetById(labId);
-            await this.CheckUserInClass(user, lab.ClassId);
+            await this.CheckUserInClass(user, lab.TeamId);
 
             try
             {
@@ -113,7 +122,7 @@ namespace HseClass.Api.Controllers
         {
             var lab = await _labRepository.GetById(labId);
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
-            await this.CheckUserInClass(user, lab.ClassId);
+            await this.CheckUserInClass(user, lab.TeamId);
             
             return await _userLab.GetByLabId(labId);
         }
@@ -128,8 +137,8 @@ namespace HseClass.Api.Controllers
             var lab = await _labRepository.GetById(labId);
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             var checkedUser = await _userRepository.GetById(checkedUserId);
-            await this.CheckUserInClass(user, lab.ClassId);
-            await this.CheckUserInClass(checkedUser ,lab.ClassId);
+            await this.CheckUserInClass(user, lab.TeamId);
+            await this.CheckUserInClass(checkedUser ,lab.TeamId);
 
             var userLab = await _userLab.GetById(checkedUserId, labId);
             Ensure.IsNotNull(userLab, nameof(_userLab.GetById));
