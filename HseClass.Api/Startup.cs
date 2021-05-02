@@ -64,7 +64,7 @@ namespace HseClass.Api
             services.AddTransient<IJwtGenerator, JwtGenerator>();
             services.AddTransient<IAuthService, AuthService>();
             
-            services.AddTransient<IClassRepository, ClassRepository>();
+            services.AddTransient<IClassRoomRepository, ClassRoomRepository>();
             services.AddTransient<ILabRepository, LabRepository>();
             services.AddTransient<IUserLabRepository,UserLabRepository>();
             services.AddTransient<IUserClassRepository, UserClassRepository>();

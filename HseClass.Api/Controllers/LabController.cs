@@ -43,16 +43,16 @@ namespace HseClass.Api.Controllers
         public async Task<ActionResult<Lab>> PostLab([FromBody] LabForm form)
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
-            await this.CheckUserInClass(user, form.ClassId);
+            await this.CheckUserInClass(user, form.ClassRoomId);
             
             var lab = await _labRepository.Create(new Lab()
             {
                 Task = form.Task,
                 Deadline = form.Deadline,
-                TeamId = form.ClassId
+                TeamId = form.ClassRoomId
             });
 
-            var usersInClass = await _userRepository.GetByClassId(form.ClassId);
+            var usersInClass = await _userRepository.GetByClassId(form.ClassRoomId);
             foreach (var us in usersInClass)
             {
                 if (await _userManager.IsInRoleAsync(user, "teacher"))
@@ -79,7 +79,7 @@ namespace HseClass.Api.Controllers
         public async Task<ActionResult<Lab>> PutLab([FromBody] LabForm form, [FromRoute] int labId)
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
-            await this.CheckUserInClass(user, form.ClassId);
+            await this.CheckUserInClass(user, form.ClassRoomId);
             
             var lab = await _labRepository.GetById(labId);
             Ensure.IsNotNull(lab, nameof(_labRepository.GetById));

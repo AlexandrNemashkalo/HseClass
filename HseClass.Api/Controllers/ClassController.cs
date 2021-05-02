@@ -17,18 +17,18 @@ namespace HseClass.Api.Controllers
     [Authorize(Roles = "teacher")]
     public class ClassController : ControllerBase
     {
-        private readonly IClassRepository _classRepository;
+        private readonly IClassRoomRepository _classRoomRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserClassRepository _userClass;
         private readonly UserManager<User> _userManager;
         
         public ClassController( 
-            IClassRepository classRepository,
+            IClassRoomRepository classRoomRepository,
             IUserRepository userRepository,
             IUserClassRepository userClass,
             UserManager<User> userManager)
         {
-            _classRepository = classRepository;
+            _classRoomRepository = classRoomRepository;
             _userRepository = userRepository;
             _userClass = userClass;
             _userManager = userManager;
@@ -39,9 +39,9 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<List<Team>>> Get()
+        public async Task<ActionResult<List<ClassRoom>>> Get()
         {
-            return await _classRepository.GetByUserId(this.GetUserIdFromToken());
+            return await _classRoomRepository.GetByUserId(this.GetUserIdFromToken());
         }
         
         /// <summary>
@@ -49,12 +49,12 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{classId}")]
-        public async Task<ActionResult<List<Team>>> Get(int classId)
+        public async Task<ActionResult<List<ClassRoom>>> Get(int classId)
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             await this.CheckUserInClass(user, classId);
                 
-            return await _classRepository.GetByUserId(this.GetUserIdFromToken());
+            return await _classRoomRepository.GetByUserId(this.GetUserIdFromToken());
         }
         
         /// <summary>
@@ -62,16 +62,16 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<Team>> Post([FromBody] ClassForm form)
+        public async Task<ActionResult<ClassRoom>> Post([FromBody] ClassForm form)
         {
-            var cl = await _classRepository.Create(new Team()
+            var cl = await _classRoomRepository.Create(new ClassRoom()
             {
                 Title = form.Title
             });
 
             await _userClass.Create(cl.Id, this.GetUserIdFromToken());
             
-            return await _classRepository.GetById(cl.Id);
+            return await _classRoomRepository.GetById(cl.Id);
         }
         
         /// <summary>
@@ -79,16 +79,16 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("{classId}")]
-        public async Task<ActionResult<Team>> Put([FromBody] ClassForm form, [FromRoute] int classId)
+        public async Task<ActionResult<ClassRoom>> Put([FromBody] ClassForm form, [FromRoute] int classId)
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             await this.CheckUserInClass(user, classId);
             
-            var cl = await _classRepository.GetById(classId);
+            var cl = await _classRoomRepository.GetById(classId);
 
             cl.Title = form.Title;
             
-            return  await _classRepository.Update(cl);
+            return  await _classRoomRepository.Update(cl);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace HseClass.Api.Controllers
 
             try
             {
-                await _classRepository.Delete(classId);
+                await _classRoomRepository.Delete(classId);
             }
             catch
             {

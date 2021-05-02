@@ -15,12 +15,12 @@ namespace HseClass.Core.Repositories
             _context = context;
             
         }
-        public async Task<UserTeam> Create(int classId, int userId)
+        public async Task<UserClass> Create(int classId, int userId)
         {
-            var result =await _context.UserTeams
-                .AddAsync(new UserTeam()
+            var result =await _context.UserClasses
+                .AddAsync(new UserClass()
                 {
-                    TeamId = classId,
+                    ClassRoomId = classId,
                     UserId = userId
                 });
             
@@ -31,9 +31,9 @@ namespace HseClass.Core.Repositories
 
         public async Task Delete(int classId, int userId)
         {
-            var userClass = await _context.UserTeams
-                .FirstOrDefaultAsync(uc => uc.UserId == userId && uc.TeamId == classId);
-            _context.UserTeams.Remove(userClass);
+            var userClass = await _context.UserClasses
+                .FirstOrDefaultAsync(uc => uc.UserId == userId && uc.ClassRoomId == classId);
+            _context.UserClasses.Remove(userClass);
             await _context.SaveChangesAsync();
         }
     }

@@ -11,6 +11,11 @@ namespace HseClass.Core.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly HseClassContext _context;
+
+        public UserRepository(HseClassContext context)
+        {
+            _context = context;
+        }
         
         public async Task<User> GetById(int userId)
         {
@@ -24,11 +29,11 @@ namespace HseClass.Core.Repositories
         {
             var query =
                 from c in _context.Users 
-                join p in _context.UserTeams
-                    on c.Id equals p.TeamId
-                join u in _context.Classes
+                join p in _context.UserClasses
+                    on c.Id equals p.ClassRoomId
+                join u in _context.ClassRooms
                     on p.UserId equals u.Id
-                where p.TeamId == classId
+                where p.ClassRoomId == classId
                 select c;
 
             return await query.ToListAsync();

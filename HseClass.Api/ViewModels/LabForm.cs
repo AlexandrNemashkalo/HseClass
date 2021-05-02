@@ -8,7 +8,7 @@ namespace HseClass.Api.ViewModels
         public string Task { get; set; }
 
         [Required]
-        public int ClassId { get; set; }
+        public int ClassRoomId { get; set; }
         
         public DateTime Deadline { get; set; }
     }

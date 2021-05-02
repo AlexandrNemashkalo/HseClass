@@ -16,20 +16,20 @@ namespace HseClass.Api.Controllers
 {
     [Route("api/[controller]")]
     [Authorize(Roles = "student")]
-    public class UserController : ControllerBase
+    public class StudentController : ControllerBase
     {
-        private readonly IClassRepository _classRepository;
+        private readonly IClassRoomRepository _classRoomRepository;
         private readonly IUserRepository _userRepository;
         private readonly ILabRepository _labRepository;
         private readonly IUserLabRepository _userLab;
         
-        public UserController( 
-            IClassRepository classRepository,
+        public StudentController( 
+            IClassRoomRepository classRoomRepository,
             IUserRepository userRepository,
             ILabRepository labRepository,
             IUserLabRepository userLab)
         {
-            _classRepository = classRepository;
+            _classRoomRepository = classRoomRepository;
             _userRepository = userRepository;
             _labRepository = labRepository;
             _userLab = userLab;
@@ -40,9 +40,9 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("class")]
-        public async Task<ActionResult<List<Team>>> Get()
+        public async Task<ActionResult<List<ClassRoom>>> Get()
         {
-            return await _classRepository.GetByUserId(this.GetUserIdFromToken());
+            return await _classRoomRepository.GetByUserId(this.GetUserIdFromToken());
         }
         
         /// <summary>
@@ -50,12 +50,12 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("class/{classId}")]
-        public async Task<ActionResult<List<Team>>> Get(int classId)
+        public async Task<ActionResult<List<ClassRoom>>> Get(int classId)
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             await this.CheckUserInClass(user, classId);
                 
-            return await _classRepository.GetByUserId(this.GetUserIdFromToken());
+            return await _classRoomRepository.GetByUserId(this.GetUserIdFromToken());
         }
         
         /// <summary>

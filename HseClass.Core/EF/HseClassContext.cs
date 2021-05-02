@@ -8,9 +8,9 @@ namespace HseClass.Core.EF
 {
     public sealed class HseClassContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
-        public DbSet<Team> Classes { get; set; }
+        public DbSet<ClassRoom> ClassRooms { get; set; }
 
-        public DbSet<UserTeam> UserTeams { get; set; }
+        public DbSet<UserClass> UserClasses { get; set; }
         
         public DbSet<UserLab> UserLabs { get; set; }
 
@@ -24,8 +24,8 @@ namespace HseClass.Core.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserTeam>()
-                .HasKey(uc => new {uc.UserId, uc.TeamId});
+            modelBuilder.Entity<UserClass>()
+                .HasKey(uc => new {uc.UserId, TeamId = uc.ClassRoomId});
             
             modelBuilder.Entity<UserLab>()
                 .HasKey(uc => new {uc.UserId, uc.LabId});
