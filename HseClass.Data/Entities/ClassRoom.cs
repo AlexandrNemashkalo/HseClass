@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace HseClass.Data.Entities
 {
@@ -7,6 +8,8 @@ namespace HseClass.Data.Entities
         public int Id { get; set; }
         
         public string Title { get; set; }
+        
+        public Guid Code { get; set; }
         
         public List<UserClass> UserClasses { get; set; } = new List<UserClass>();
         

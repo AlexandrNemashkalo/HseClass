@@ -21,7 +21,7 @@ namespace HseClass.Core.Repositories
         {
             return await _context.Users
                 .Include(u => u.UserClasses)
-                .Include(u => u.UserLabs)
+                .Include(u => u.SolutionLabs)
                 .FirstOrDefaultAsync(u => u.Id == userId);
         }
 

@@ -3,7 +3,7 @@ using HseClass.Data.Enums;
 
 namespace HseClass.Data.Entities
 {
-    public class UserLab
+    public class SolutionLab
     {
         public int UserId { get; set; }
         
@@ -12,6 +12,10 @@ namespace HseClass.Data.Entities
         public int LabId { get; set; }
         
         public int? Grade { get; set; }
+        
+        public string VideoPath { get; set; }
+        
+        public string TimeSpan { get; set; }
         
         public LabStatusEnums Status { get; set; }
         

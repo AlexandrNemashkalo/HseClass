@@ -4,7 +4,6 @@
     {
         Assigned,
         Completed,
-        Checked,
         Overdue
     }
 }

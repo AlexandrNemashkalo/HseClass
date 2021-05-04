@@ -12,7 +12,9 @@ namespace HseClass.Core.EF
 
         public DbSet<UserClass> UserClasses { get; set; }
         
-        public DbSet<UserLab> UserLabs { get; set; }
+        public DbSet<SolutionLab> SolutionLabs { get; set; }
+        
+        public DbSet<TaskLab> TaskLabs { get; set; }
 
         public DbSet<Lab> Labs { get; set; }
         
@@ -27,10 +29,10 @@ namespace HseClass.Core.EF
             modelBuilder.Entity<UserClass>()
                 .HasKey(uc => new {uc.UserId, TeamId = uc.ClassRoomId});
             
-            modelBuilder.Entity<UserLab>()
+            modelBuilder.Entity<SolutionLab>()
                 .HasKey(uc => new {uc.UserId, uc.LabId});
 
-            modelBuilder.Entity<IdentityRole<int>>().HasData(
+           /* modelBuilder.Entity<IdentityRole<int>>().HasData(
                 new IdentityRole<int>[]
                 {
                     new()
@@ -62,7 +64,7 @@ namespace HseClass.Core.EF
                         NormalizedName = "SUPERADMIN"
                     }
                 });
-            
+            */
 
             base.OnModelCreating(modelBuilder);
         }

@@ -1,26 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using HseClass.Api.Configurations;
 using HseClass.Api.Helpers;
 using HseClass.Core.EF;
 using HseClass.Core.Jwt;
 using HseClass.Core.Repositories;
 using HseClass.Core.Services;
-using HseClass.Data.Entities;
 using HseClass.Data.IRepositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 
 namespace HseClass.Api
 {
@@ -63,13 +53,14 @@ namespace HseClass.Api
 
             services.AddTransient<IJwtGenerator, JwtGenerator>();
             services.AddTransient<IAuthService, AuthService>();
-            
+
             services.AddTransient<IClassRoomRepository, ClassRoomRepository>();
             services.AddTransient<ILabRepository, LabRepository>();
-            services.AddTransient<IUserLabRepository,UserLabRepository>();
+            services.AddTransient<ITaskLabRepository,TaskLabRepository>();
+            services.AddTransient<ISolutionLabRepository,SolutionLabRepository>();
             services.AddTransient<IUserClassRepository, UserClassRepository>();
             services.AddTransient<IUserRepository,UserRepository>();
-            
+          
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

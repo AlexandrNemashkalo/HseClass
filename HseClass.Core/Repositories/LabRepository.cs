@@ -39,7 +39,7 @@ namespace HseClass.Core.Repositories
 
         public async Task<List<Lab>> GetByClassId(int classId)
         {
-            return await _context.Labs.Where(l => l.TeamId == classId).ToListAsync();
+            return await _context.Labs.Where(l => l.ClassRoomId == classId).ToListAsync();
         }
 
         public async Task<Lab> Update(Lab lab)

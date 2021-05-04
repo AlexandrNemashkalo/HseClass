@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HseClass.Core.EF;
@@ -53,6 +54,14 @@ namespace HseClass.Core.Repositories
                 .Include(c => c.Labs)
                 .Include(c => c.UserClasses)
                 .FirstOrDefaultAsync(c => c.Id == classId);
+        }
+
+        public async Task<ClassRoom> GetByCode(Guid code)
+        {
+            return await _context.ClassRooms
+                .Include(c => c.Labs)
+                .Include(c => c.UserClasses)
+                .FirstOrDefaultAsync(c => c.Code == code);
         }
 
         public async Task<ClassRoom> Update(ClassRoom cl)

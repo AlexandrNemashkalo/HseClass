@@ -9,7 +9,7 @@ namespace HseClass.Data.Entities
 
         public List<UserClass> UserClasses { get; set; } = new List<UserClass>();
         
-        public List<UserLab> UserLabs { get; set; } = new List<UserLab>();
+        public List<SolutionLab> SolutionLabs { get; set; } = new List<SolutionLab>();
         
     }
 }

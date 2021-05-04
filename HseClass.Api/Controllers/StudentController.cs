@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using HseClass.Api.Helpers;
 using HseClass.Api.ViewModels;
@@ -10,6 +12,8 @@ using HseClass.Data.Entities;
 using HseClass.Data.Enums;
 using HseClass.Data.IRepositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HseClass.Api.Controllers
@@ -20,19 +24,31 @@ namespace HseClass.Api.Controllers
     {
         private readonly IClassRoomRepository _classRoomRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IUserClassRepository _userClass;
         private readonly ILabRepository _labRepository;
-        private readonly IUserLabRepository _userLab;
+        private readonly ISolutionLabRepository _solutionLab;
+        private readonly UserManager<User> _userManager;
+        private readonly IWebHostEnvironment _environment;
+        private readonly ITaskLabRepository _taskLab;
         
         public StudentController( 
             IClassRoomRepository classRoomRepository,
             IUserRepository userRepository,
             ILabRepository labRepository,
-            IUserLabRepository userLab)
+            ISolutionLabRepository solutionLab,
+            UserManager<User> userManager,
+            IUserClassRepository userClass,
+            IWebHostEnvironment environment,
+            ITaskLabRepository taskLab)
         {
             _classRoomRepository = classRoomRepository;
             _userRepository = userRepository;
             _labRepository = labRepository;
-            _userLab = userLab;
+            _solutionLab = solutionLab;
+            _userManager = userManager;
+            _userClass = userClass;
+            _environment = environment;
+            _taskLab = taskLab;
         }
         
         /// <summary>
@@ -50,30 +66,159 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("class/{classId}")]
-        public async Task<ActionResult<List<ClassRoom>>> Get(int classId)
+        public async Task<ActionResult<ClassInfoViewModel>> Get(int classId)
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             await this.CheckUserInClass(user, classId);
                 
-            return await _classRoomRepository.GetByUserId(this.GetUserIdFromToken());
+            var cl = await _classRoomRepository.GetById(classId);
+            
+            var users = new List<UserViewModel>();
+            foreach (var uc in cl.UserClasses)
+            {
+                var u = await _userRepository.GetById(uc.UserId);
+                var roles = await _userManager.GetRolesAsync(u);
+                users.Add(new UserViewModel()
+                {
+                    Name = u.Name,
+                    Id = u.Id,
+                    Email = u.Email,
+                    IsTeacher = roles.Any(r => r == "teacher")
+                });
+            }
+
+            return new ClassInfoViewModel()
+            {
+                Id = cl.Id,
+                Title = cl.Title,
+                Code = cl.Code,
+                Users = users,
+                Labs = cl.Labs
+            };
+        }
+
+        /// <summary>
+        /// Получение детальной информации о задании лабораторной и его решении
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("lab/{labId}")]
+        public async Task<ActionResult<LabInfoViewModel>> GetLabInfo(int labId)
+        {
+            var user = await _userRepository.GetById(this.GetUserIdFromToken());
+            var lab = await _labRepository.GetById(labId);
+            var task = await _taskLab.GetById(lab.TaskLabId);
+            var solution = user.SolutionLabs.FirstOrDefault(s => s.LabId == labId);
+
+            return new LabInfoViewModel()
+            {
+                Id = lab.Id,
+                Title = lab.Title,
+                Task = new TaskLabViewModel()
+                {
+                    Id = task.Id,
+                    Description = task.Description,
+                    Equipment = task.Equipment,
+                    Name = task.Name,
+                    Theme = task.Theme
+                },
+                ClassRoomId = lab.ClassRoomId,
+                MaxGrade = lab.MaxGrade,
+                Deadline = lab.Deadline,
+                Solution = solution
+            };
+        }
+
+        /// <summary>
+        /// Получение списка активных и завершенных решений
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("solution")]
+        public async Task<ActionResult<SolutionsViewModel>> GetSolutions()
+        {
+            var user = await _userRepository.GetById(this.GetUserIdFromToken());
+
+            var activeSolutions = new List<SolutionViewModel>();
+            var finishedSolutions = new List<SolutionViewModel>();
+            
+            foreach (var s in user.SolutionLabs)
+            {
+                var lab = await _labRepository.GetById(s.LabId);
+                var task = await _taskLab.GetById(lab.TaskLabId);
+                
+                var sol = new SolutionViewModel()
+                {
+                    DateOfDownload = s.DateOfDownload,
+                    Grade = s.Grade,
+                    Lab = new LabInfo()
+                    {
+                        ClassRoomId = lab.ClassRoomId,
+                        Deadline = lab.Deadline,
+                        Id =lab.Id,
+                        MaxGrade = lab.MaxGrade,
+                        Task = new TaskLabViewModel()
+                        {
+                            Description = task.Description,
+                            Equipment = task.Description,
+                            Id =task.Id,
+                            Name = task.Name,
+                            Theme = task.Theme
+                        }
+                    },
+                    Solution = s.Solution,
+                    Status = s.Status,
+                    TimeSpan = s.TimeSpan,
+                    UserId = s.UserId,
+                    VideoPath = s.VideoPath
+                };
+                
+                if (s.Status == LabStatusEnums.Assigned)
+                {
+                    activeSolutions.Add(sol);
+                }
+                else
+                {
+                    finishedSolutions.Add(sol);
+                }
+            }
+
+            return new SolutionsViewModel()
+            {
+                ActiveSolutions = activeSolutions,
+                FinishedSolutions = finishedSolutions
+            };
         }
         
         /// <summary>
         /// Изменение выполненой лаб. работы студента
         /// </summary>
         /// <returns></returns>
-        [HttpPut("lab/{labId}")]
-        public async Task<ActionResult<UserLab>> UpdateUserLab(int labId, [FromBody] UserLabSolutionForm form)
+        [HttpPut("solution/{labId}")]
+        public async Task<ActionResult<SolutionLab>> UpdateUserLab(int labId, [FromForm] UserLabSolutionForm form)
         {
             var lab = await _labRepository.GetById(labId);
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
-            await this.CheckUserInClass(user, lab.TeamId);
+            await this.CheckUserInClass(user, lab.ClassRoomId);
 
-            var userLab = await _userLab.GetById(user.Id, labId);
-            Ensure.IsNotNull(userLab, nameof(_userLab.GetById));
+            var userLab = await _solutionLab.GetById(user.Id, labId);
+            Ensure.IsNotNull(userLab, nameof(_solutionLab.GetById));
 
             userLab.Solution = form.Solution;
             userLab.DateOfDownload = DateTime.Now;
+            userLab.TimeSpan = form.TimeSpan;
+            
+            var filePath = Path.Combine(_environment.WebRootPath, $"{userLab.UserId}-{userLab.LabId}");
+            
+            if (form.Video.Length > 0) 
+            {
+                await using (var stream = System.IO.File.Create(filePath))
+                {
+                    await form.Video.CopyToAsync(stream);
+                }
+            }
+
+            userLab.VideoPath = filePath;
+            
+            
             
             if (lab.Deadline > DateTime.Now)
             {
@@ -84,10 +229,38 @@ namespace HseClass.Api.Controllers
                 userLab.Status = LabStatusEnums.Overdue;
             }
 
-            return await _userLab.Update(userLab);
+            return await _solutionLab.Update(userLab);
         }
         
-        
+        /// <summary>
+        /// Присоединение к классу по коду
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut("class/{code}")]
+        public async Task<ActionResult<ClassRoom>> AddToClass(Guid code)
+        {
+            var cl = await _classRoomRepository.GetByCode(code);
+            Ensure.IsNotNull(cl, nameof(_classRoomRepository.GetByCode));
+            
+            var addedUser = await _userManager.FindByIdAsync(this.GetUserIdFromToken().ToString());
+            
+            await _userClass.Create(cl.Id, addedUser.Id);
+
+            foreach (var lab in cl.Labs)
+            {
+                await _solutionLab.Create(new SolutionLab()
+                {
+                    DateOfDownload = null,
+                    Grade = null,
+                    LabId = lab.Id,
+                    Solution = null,
+                    Status = LabStatusEnums.Assigned,
+                    UserId = addedUser.Id
+                });
+            }
+
+            return cl;
+        }
         
         
     }
