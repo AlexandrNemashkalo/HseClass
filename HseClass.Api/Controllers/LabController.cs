@@ -5,33 +5,30 @@ using System.Threading.Tasks;
 using HseClass.Api.Helpers;
 using HseClass.Api.ViewModels;
 using HseClass.Core.Guard;
-using HseClass.Data.Entities;
-using HseClass.Data.Enums;
-using HseClass.Data.IRepositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HseClass.Api.Controllers
-{
+{/*
     [Route("api/[controller]-Teacher")]
     [Authorize(Roles = "teacher")]
     public class LabController : ControllerBase
     {
         private readonly ILabRepository _labRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IUserLabRepository _userLab;
-        private readonly UserManager<User> _userManager;
+        private readonly ISolutionLabRepository _solutionLab;
+        private readonly UserManager<UserEntity> _userManager;
         
         public LabController( 
             ILabRepository labRepository,
             IUserRepository userRepository,
-            IUserLabRepository userLab,
-            UserManager<User> userManager)
+            ISolutionLabRepository solutionLab,
+            UserManager<UserEntity> userManager)
         {
             _labRepository = labRepository;
             _userRepository = userRepository;
-            _userLab = userLab;
+            _solutionLab = solutionLab;
             _userManager = userManager;
         }
         
@@ -40,16 +37,16 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<Lab>> PostLab([FromBody] LabForm form)
+        public async Task<ActionResult<LabEntity>> PostLab([FromBody] LabForm form)
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             await this.CheckUserInClass(user, form.ClassRoomId);
             
-            var lab = await _labRepository.Create(new Lab()
+            var lab = await _labRepository.Create(new LabEntity()
             {
                 Task = form.Task,
                 Deadline = form.Deadline,
-                TeamId = form.ClassRoomId
+                ClassRoomId = form.ClassRoomId
             });
 
             var usersInClass = await _userRepository.GetByClassId(form.ClassRoomId);
@@ -60,7 +57,7 @@ namespace HseClass.Api.Controllers
                     continue;
                 }
                 
-                await _userLab.Create(new UserLab()
+                await _solutionLab.Create(new SolutionLabEntity()
                 {
                     UserId = us.Id,
                     LabId = lab.Id,
@@ -76,7 +73,7 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("{labId}")]
-        public async Task<ActionResult<Lab>> PutLab([FromBody] LabForm form, [FromRoute] int labId)
+        public async Task<ActionResult<LabEntity>> PutLab([FromBody] LabForm form, [FromRoute] int labId)
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             await this.CheckUserInClass(user, form.ClassRoomId);
@@ -99,7 +96,7 @@ namespace HseClass.Api.Controllers
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             var lab = await _labRepository.GetById(labId);
-            await this.CheckUserInClass(user, lab.TeamId);
+            await this.CheckUserInClass(user, lab.ClassRoomId);
 
             try
             {
@@ -118,13 +115,13 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{labId}/user")]
-        public async Task<ActionResult<List<UserLab>>> GetUserLabs(int labId)
+        public async Task<ActionResult<List<SolutionLabEntity>>> GetUserLabs(int labId)
         {
             var lab = await _labRepository.GetById(labId);
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
-            await this.CheckUserInClass(user, lab.TeamId);
+            await this.CheckUserInClass(user, lab.ClassRoomId);
             
-            return await _userLab.GetByLabId(labId);
+            return await _solutionLab.GetByLabId(labId);
         }
         
         /// <summary>
@@ -132,21 +129,21 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("{labId}/user/{checkedUserId}")]
-        public async Task<ActionResult<UserLab>> UpdateUserLab(int labId, int checkedUserId, [FromBody] UserLabForm form )
+        public async Task<ActionResult<SolutionLabEntity>> UpdateUserLab(int labId, int checkedUserId, [FromBody] UserLabForm form )
         {
             var lab = await _labRepository.GetById(labId);
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             var checkedUser = await _userRepository.GetById(checkedUserId);
-            await this.CheckUserInClass(user, lab.TeamId);
-            await this.CheckUserInClass(checkedUser ,lab.TeamId);
+            await this.CheckUserInClass(user, lab.ClassRoomId);
+            await this.CheckUserInClass(checkedUser ,lab.ClassRoomId);
 
-            var userLab = await _userLab.GetById(checkedUserId, labId);
-            Ensure.IsNotNull(userLab, nameof(_userLab.GetById));
+            var userLab = await _solutionLab.GetById(checkedUserId, labId);
+            Ensure.IsNotNull(userLab, nameof(_solutionLab.GetById));
 
             userLab.Grade = form.Grade;
             userLab.Status = form.Status;
 
-            return await _userLab.Update(userLab);
+            return await _solutionLab.Update(userLab);
         }
-    }
+    }*/
 }

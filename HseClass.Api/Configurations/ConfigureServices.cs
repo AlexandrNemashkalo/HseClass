@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using HseClass.Core.EF;
-using HseClass.Data.Entities;
+using HseClass.Data.EF;
+using HseClass.Data.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -46,14 +46,14 @@ namespace HseClass.Api.Configurations
         public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
         {
             services
-                .AddIdentity<User, IdentityRole<int>>(o =>
+                .AddIdentity<UserEntity, IdentityRole<int>>(o =>
                 {
                     o.Password.RequireNonAlphanumeric = false;
                     o.Password.RequireUppercase = false;
                     o.Password.RequireLowercase = false;
                 })
                 .AddEntityFrameworkStores<HseClassContext>()
-                .AddUserManager<UserManager<User>>();
+                .AddUserManager<UserManager<UserEntity>>();
 
             return services;
         }

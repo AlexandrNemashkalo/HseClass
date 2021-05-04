@@ -1,34 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using HseClass.Api.Helpers;
 using HseClass.Api.ViewModels;
+using HseClass.Core;
+using HseClass.Core.Entities;
 using HseClass.Core.Guard;
+using HseClass.Core.IRepositories;
+using HseClass.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HseClass.Api.Controllers
-{/*
-    [Route("api/[controller]-Teacher")]
+{
+    [Route("api/[controller]")]
     [Authorize(Roles = "teacher")]
-    public class ClassController : ControllerBase
+    public class TeacherController : ControllerBase
     {
+        private readonly IUnitOfWork _data;
         private readonly IClassRoomRepository _classRoomRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IUserClassRepository _userClass;
+        //private readonly IUserClassRepository _userClass;
         private readonly UserManager<UserEntity> _userManager;
         
-        public ClassController( 
+        public TeacherController( 
+            IUnitOfWork data,
             IClassRoomRepository classRoomRepository,
             IUserRepository userRepository,
-            IUserClassRepository userClass,
+            //IUserClassRepository userClass,
             UserManager<UserEntity> userManager)
         {
+            _data = data;
             _classRoomRepository = classRoomRepository;
             _userRepository = userRepository;
-            _userClass = userClass;
+            //_userClass = userClass;
             _userManager = userManager;
         }
         
@@ -37,9 +42,9 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<List<ClassRoomEntity>>> Get()
+        public async Task<ActionResult<List<ClassRoom>>> Get()
         {
-            return await _classRoomRepository.GetByUserId(this.GetUserIdFromToken());
+            return await _data.ClassRoom.GetByUserId(this.GetUserIdFromToken());
         }
         
         /// <summary>
@@ -47,12 +52,11 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{classId}")]
-        public async Task<ActionResult<List<ClassRoomEntity>>> Get(int classId)
+        public async Task<ActionResult<List<ClassRoom>>> Get(int classId)
         {
-            var user = await _userRepository.GetById(this.GetUserIdFromToken());
-            await this.CheckUserInClass(user, classId);
-                
-            return await _classRoomRepository.GetByUserId(this.GetUserIdFromToken());
+            var result = await _data.User.CheckUserInClass(this.GetUserIdFromToken(), classId);
+            Ensure.That(result, "ошибка доступа");
+            return await _data.ClassRoom.GetByUserId(this.GetUserIdFromToken());
         }
         
         /// <summary>
@@ -60,14 +64,14 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<ClassRoomEntity>> Post([FromBody] ClassForm form)
+        public async Task<ActionResult<ClassRoom>> Post([FromBody] ClassForm form)
         {
-            var cl = await _classRoomRepository.Create(new ClassRoomEntity()
+            var cl = await _data.ClassRoom.Create(new ClassRoom()
             {
                 Title = form.Title
             });
 
-            await _userClass.Create(cl.Id, this.GetUserIdFromToken());
+            await _data.User.AddToClass(this.GetUserIdFromToken(),cl.Id);
             
             return await _classRoomRepository.GetById(cl.Id);
         }
@@ -77,16 +81,16 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("{classId}")]
-        public async Task<ActionResult<ClassRoomEntity>> Put([FromBody] ClassForm form, [FromRoute] int classId)
+        public async Task<ActionResult<ClassRoom>> Put([FromBody] ClassForm form, [FromRoute] int classId)
         {
-            var user = await _userRepository.GetById(this.GetUserIdFromToken());
-            await this.CheckUserInClass(user, classId);
+            var result = await _data.User.CheckUserInClass(this.GetUserIdFromToken(), classId);
+            Ensure.That(result, "ошибка доступа");
             
             var cl = await _classRoomRepository.GetById(classId);
 
             cl.Title = form.Title;
             
-            return  await _classRoomRepository.Update(cl);
+            return  await _data.ClassRoom.Update(cl);
         }
 
         /// <summary>
@@ -96,12 +100,11 @@ namespace HseClass.Api.Controllers
         [HttpDelete("{classId}")]
         public async Task<ActionResult<bool>> Delete(int classId)
         {
-            var user = await _userRepository.GetById(this.GetUserIdFromToken());
-            await this.CheckUserInClass(user, classId);
-
+            var result = await _data.User.CheckUserInClass(this.GetUserIdFromToken(), classId);
+            Ensure.That(result, "ошибка доступа");
             try
             {
-                await _classRoomRepository.Delete(classId);
+                await _data.ClassRoom.Delete(classId);
             }
             catch
             {
@@ -118,15 +121,15 @@ namespace HseClass.Api.Controllers
         [HttpPost("{classId}/user/{addedUserEmail}")]
         public async Task<ActionResult<bool>> AddStudent(int classId, string addedUserEmail)
         {
-            var user = await _userRepository.GetById(this.GetUserIdFromToken());
-            await this.CheckUserInClass(user, classId);
+            var result = await _data.User.CheckUserInClass(this.GetUserIdFromToken(), classId);
+            Ensure.That(result, "ошибка доступа");
 
-            var addedUser = await _userManager.FindByEmailAsync(addedUserEmail);
+            var addedUser = await _data.User.FindByEmail(addedUserEmail);
             Ensure.IsNotNull(addedUser, nameof(_userManager.FindByEmailAsync));
 
             try
             {
-                await _userClass.Create(classId, addedUser.Id);
+                await _data.User.AddToClass(addedUser.Id, classId);
             }
             catch
             {
@@ -143,14 +146,15 @@ namespace HseClass.Api.Controllers
         [HttpDelete("{classId}/user/{deletedUserId}")]
         public async Task<ActionResult<bool>> Delete(int classId, int deletedUserId)
         {
-            var user = await _userRepository.GetById(this.GetUserIdFromToken());
-            var deletedUser = await _userRepository.GetById(deletedUserId);
-            await this.CheckUserInClass(user, classId);
-            await this.CheckUserInClass(deletedUser, classId);
-
+            var result1 = await _data.User.CheckUserInClass(this.GetUserIdFromToken(), classId);
+            Ensure.That(result1, "ошибка доступа");
+            
+            var result2 = await _data.User.CheckUserInClass(deletedUserId, classId);
+            Ensure.That(result2, "ошибка доступа");
+            
             try
             {
-                await _userClass.Delete(classId, deletedUserId);
+                await _data.User.DeleteFromClass(deletedUserId, classId);
             }
             catch
             {
@@ -159,5 +163,6 @@ namespace HseClass.Api.Controllers
 
             return true;
         }
-    }*/
+        
+    }
 }

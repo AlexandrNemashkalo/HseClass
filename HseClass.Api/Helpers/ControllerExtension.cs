@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using HseClass.Data.Entities;
+using HseClass.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HseClass.Api.Helpers
@@ -25,12 +25,12 @@ namespace HseClass.Api.Helpers
             return int.Parse(nameIdentifier.Value);
         }
         
-        internal static async Task CheckUserInClass(this ControllerBase apiController, User user, int classId)
+        /*internal static async Task CheckUserInClass(this ControllerBase apiController, User userEntity, int classId)
         {
-            if (!user.UserClasses.Any(uc => uc.ClassRoomId == classId))
+            if (!userEntity.UserClasses.Any(uc => uc.ClassRoomId == classId))
             {
                 throw new Exception("ошибка доступа");
             }
-        }
+        }*/
     }
 }

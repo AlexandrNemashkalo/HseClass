@@ -46,11 +46,10 @@ namespace HseClass.Api.Controllers
         {
             try
             {
-                return new JsonResult(await _authService.Register(
+                return new JsonResult(await _authService.RegisterStudent(
                     form.Email,
                     form.Password,
-                    form.Name, 
-                    RoleEnums.Student));
+                    form.Name));
             }
             catch (Exception e)
             {
@@ -69,11 +68,10 @@ namespace HseClass.Api.Controllers
         {
             try
             {
-                return new JsonResult(await _authService.Register(
+                return new JsonResult(await _authService.RegisterTeacher(
                     form.Email,
                     form.Password,
-                    form.Name, 
-                    RoleEnums.Teacher));
+                    form.Name));
             }
             catch (Exception e)
             {

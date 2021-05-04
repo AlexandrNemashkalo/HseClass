@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using HseClass.Data.Enums;
+using HseClass.Core.Entities;
 
 namespace HseClass.Api.ViewModels
 {
@@ -7,6 +7,6 @@ namespace HseClass.Api.ViewModels
     {
         public int? Grade { get; set; }
         
-        public LabStatusEnums Status { get; set; }
+        public LabStatus Status { get; set; }
     }
 }

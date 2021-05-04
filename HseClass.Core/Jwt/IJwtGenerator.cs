@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
-using HseClass.Data.Entities;
+﻿using HseClass.Core.Entities;
+using System.Threading.Tasks;
 
 namespace HseClass.Core.Jwt
 {
     public interface IJwtGenerator
     {
-        Task<object> GenerateJwt(User user);
+        Task<object> GenerateJwt(User userEntity);
     }
 }

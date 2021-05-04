@@ -4,35 +4,31 @@ using System.Linq;
 using System.Threading.Tasks;
 using HseClass.Api.Helpers;
 using HseClass.Api.ViewModels;
-using HseClass.Core.EF;
 using HseClass.Core.Guard;
-using HseClass.Data.Entities;
-using HseClass.Data.Enums;
-using HseClass.Data.IRepositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HseClass.Api.Controllers
 {
-    [Route("api/[controller]")]
+    /*[Route("api/[controller]")]
     [Authorize(Roles = "student")]
     public class StudentController : ControllerBase
     {
         private readonly IClassRoomRepository _classRoomRepository;
         private readonly IUserRepository _userRepository;
         private readonly ILabRepository _labRepository;
-        private readonly IUserLabRepository _userLab;
+        private readonly ISolutionLabRepository _solutionLab;
         
         public StudentController( 
             IClassRoomRepository classRoomRepository,
             IUserRepository userRepository,
             ILabRepository labRepository,
-            IUserLabRepository userLab)
+            ISolutionLabRepository solutionLab)
         {
             _classRoomRepository = classRoomRepository;
             _userRepository = userRepository;
             _labRepository = labRepository;
-            _userLab = userLab;
+            _solutionLab = solutionLab;
         }
         
         /// <summary>
@@ -40,7 +36,7 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("class")]
-        public async Task<ActionResult<List<ClassRoom>>> Get()
+        public async Task<ActionResult<List<ClassRoomEntity>>> Get()
         {
             return await _classRoomRepository.GetByUserId(this.GetUserIdFromToken());
         }
@@ -50,7 +46,7 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("class/{classId}")]
-        public async Task<ActionResult<List<ClassRoom>>> Get(int classId)
+        public async Task<ActionResult<List<ClassRoomEntity>>> Get(int classId)
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             await this.CheckUserInClass(user, classId);
@@ -63,14 +59,14 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("lab/{labId}")]
-        public async Task<ActionResult<UserLab>> UpdateUserLab(int labId, [FromBody] UserLabSolutionForm form)
+        public async Task<ActionResult<SolutionLabEntity>> UpdateUserLab(int labId, [FromBody] UserLabSolutionForm form)
         {
             var lab = await _labRepository.GetById(labId);
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
-            await this.CheckUserInClass(user, lab.TeamId);
+            await this.CheckUserInClass(user, lab.ClassRoomId);
 
-            var userLab = await _userLab.GetById(user.Id, labId);
-            Ensure.IsNotNull(userLab, nameof(_userLab.GetById));
+            var userLab = await _solutionLab.GetById(user.Id, labId);
+            Ensure.IsNotNull(userLab, nameof(_solutionLab.GetById));
 
             userLab.Solution = form.Solution;
             userLab.DateOfDownload = DateTime.Now;
@@ -84,11 +80,11 @@ namespace HseClass.Api.Controllers
                 userLab.Status = LabStatusEnums.Overdue;
             }
 
-            return await _userLab.Update(userLab);
+            return await _solutionLab.Update(userLab);
         }
         
         
         
         
-    }
+    }*/
 }

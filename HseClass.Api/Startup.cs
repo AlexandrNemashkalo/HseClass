@@ -4,12 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using HseClass.Api.Configurations;
 using HseClass.Api.Helpers;
-using HseClass.Core.EF;
+using HseClass.Core;
+using HseClass.Core.Infrastructure;
+using HseClass.Core.IRepositories;
 using HseClass.Core.Jwt;
-using HseClass.Core.Repositories;
+using HseClass.Core.Entities;
 using HseClass.Core.Services;
-using HseClass.Data.Entities;
-using HseClass.Data.IRepositories;
+using HseClass.Data.EF;
+using HseClass.Data.Models;
+using HseClass.Data.Mappers;
+using HseClass.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -63,13 +67,21 @@ namespace HseClass.Api
 
             services.AddTransient<IJwtGenerator, JwtGenerator>();
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             
-            services.AddTransient<IClassRoomRepository, ClassRoomRepository>();
-            services.AddTransient<ILabRepository, LabRepository>();
-            services.AddTransient<IUserLabRepository,UserLabRepository>();
-            services.AddTransient<IUserClassRepository, UserClassRepository>();
+            services.AddTransient<IMapper, ContainerMapper>();
+            services.AddTransient<IMapper<User,UserEntity>, UserMapper>();
+            services.AddTransient<IMapper<UserEntity, User>, UserMapper>();
+            services.AddTransient<IMapper<UserEntity, Teacher>, TeacherMapper>();
+            services.AddTransient<IMapper<ClassRoomEntity, ClassRoom>, ClassMapper>();
+            services.AddTransient<IMapper<ClassRoom, ClassRoomEntity>, ClassMapper>();
+            
             services.AddTransient<IUserRepository,UserRepository>();
-            
+            services.AddTransient<IClassRoomRepository, ClassRoomRepository>();
+            /*services.AddTransient<ILabRepository, LabRepository>();
+            services.AddTransient<ISolutionLabRepository,SolutionLabRepository>();
+            services.AddTransient<IUserClassRepository, UserClassRepository>();*/
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

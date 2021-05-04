@@ -5,8 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using HseClass.Core.EF;
-using HseClass.Data.Entities;
+using HseClass.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -15,25 +14,23 @@ namespace HseClass.Core.Jwt
 {
     public class JwtGenerator : IJwtGenerator
     {
-        private readonly HseClassContext _data;
+        private readonly IUnitOfWork _data;
         private readonly IConfiguration _configuration;
-        private readonly UserManager<User> _userManager;
+        
 
         public JwtGenerator(
-            HseClassContext data,
-            IConfiguration conf,
-            UserManager<User> userManager)
+            IUnitOfWork data,
+            IConfiguration conf)
         {
             _data = data;
             _configuration = conf;
-            _userManager = userManager;
         }
 
         public async Task<object> GenerateJwt(User user)
         {
             try
             {
-                var roles = await _userManager.GetRolesAsync(user);
+                var roles = await _data.User.GetRoles(user);
 
                 var claims = new List<Claim>
                 {

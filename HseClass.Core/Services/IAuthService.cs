@@ -6,6 +6,8 @@ namespace HseClass.Core.Services
     {
         Task<object> Login(string email, string password);
 
-        Task<object> Register(string email, string password, string name, RoleEnums role);
+        Task<object> RegisterStudent(string email, string password, string name);
+        
+        Task<object> RegisterTeacher(string email, string password, string name);
     }
 }
