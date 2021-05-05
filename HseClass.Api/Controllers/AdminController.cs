@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using HseClass.Api.Helpers;
 using HseClass.Api.ViewModels;
@@ -87,9 +88,18 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<List<TaskLab>>> Get()
+        public async Task<ActionResult<List<TaskLabViewModel>>> Get()
         {
-            return await _taskLabRepository.GetAll();
+            var tasks = await _taskLabRepository.GetAll();
+
+            return tasks.Select(t => new TaskLabViewModel()
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Theme = t.Theme,
+                Description = t.Description,
+                Equipment = t.Equipment
+            }).ToList();
         }
         
         /// <summary>

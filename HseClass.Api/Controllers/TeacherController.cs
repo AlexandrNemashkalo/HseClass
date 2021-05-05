@@ -24,6 +24,7 @@ namespace HseClass.Api.Controllers
         private readonly ILabRepository _labRepository;
         private readonly ISolutionLabRepository _solutionLab;
         private readonly UserManager<User> _userManager;
+        private readonly ITaskLabRepository _taskLab;
         
         public TeacherController( 
             IClassRoomRepository classRoomRepository,
@@ -31,7 +32,8 @@ namespace HseClass.Api.Controllers
             IUserClassRepository userClass,
             ILabRepository labRepository,
             ISolutionLabRepository solutionLab,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            ITaskLabRepository taskLab)
         {
             _labRepository = labRepository;
             _solutionLab = solutionLab;
@@ -39,6 +41,7 @@ namespace HseClass.Api.Controllers
             _userRepository = userRepository;
             _userClass = userClass;
             _userManager = userManager;
+            _taskLab = taskLab;
         }
         
         /// <summary>
@@ -263,6 +266,25 @@ namespace HseClass.Api.Controllers
             lab.Title = form.Title;
 
             return  await _labRepository.Update(lab);
+        }
+        
+        /// <summary>
+        /// Получение всех доступных заданий
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("taskLab")]
+        public async Task<ActionResult<List<TaskLabViewModel>>> GetTaskLabs()
+        {
+            var tasks = await _taskLab.GetAll();
+
+            return tasks.Select(t => new TaskLabViewModel()
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Theme = t.Theme,
+                Description = t.Description,
+                Equipment = t.Equipment
+            }).ToList();
         }
 
         /// <summary>
