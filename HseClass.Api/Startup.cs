@@ -43,7 +43,7 @@ namespace HseClass.Api
             services.AddSwagger();
 
             services.AddDbContext<HseClassContext>(options => 
-                    options.UseSqlite(Configuration.GetConnectionString("SqliteDb"),
+                    options.UseNpgsql(Configuration.GetConnectionString("PostgresDb"),
                         b => b.MigrationsAssembly("HseClass.Api")),
                 ServiceLifetime.Transient
             );
