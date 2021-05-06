@@ -81,6 +81,7 @@ namespace HseClass.Api
 
             app.UseCors("CorsPolicy");
             
+            app.UseHttpsRedirection();
             app.UseAuthentication(); 
             app.UseAuthorization();
 

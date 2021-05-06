@@ -10,6 +10,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0-preview.3.21201.2" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0-preview.3.21201.4" />
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.10.2" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.2" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.1.2" />
@@ -25,6 +26,8 @@
     <PropertyGroup>
 		  <GenerateDocumentationFile>true</GenerateDocumentationFile>
 		  <NoWarn>$(NoWarn);1591</NoWarn>
+		  <UserSecretsId>717e9a5d-0af4-407e-bcd9-a1c8deed679b</UserSecretsId>
+		  <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
 </Project>
