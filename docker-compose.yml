@@ -19,12 +19,6 @@ services:
   image: api
   environment:
     ASPNETCORE_ENVIRONMENT: Development
-    ASPNETCORE_URLS: "https://+;http://+"
-    ASPNETCORE_HTTPS_PORT: "5555"
-    Kestrel__Certificates__Default__Path: "/https/aspnetapp.pfx"
-    Kestrel__Certificates__Default__Password: "hseclass"    
+    ASPNETCORE_URLS: "http://+"
   ports:
-   - "5555:443"
    - "5005:80"
-  volumes:
-   - ~/.aspnet/https:/https:ro
