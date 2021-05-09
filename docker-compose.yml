@@ -27,4 +27,4 @@ services:
    - "5555:443"
    - "5005:80"
   volumes:
-   - ~/.aspnet/https:/https:ro
+   - /home/admin/.aspnet/https:/https:ro
