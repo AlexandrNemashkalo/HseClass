@@ -119,7 +119,8 @@ namespace HseClass.Api.Controllers
                     Description = task.Description,
                     Equipment = task.Equipment,
                     Name = task.Name,
-                    Theme = task.Theme
+                    Theme = task.Theme,
+                    RecommendedClass = task.RecommendedClass
                 },
                 ClassRoomId = lab.ClassRoomId,
                 MaxGrade = lab.MaxGrade,
@@ -161,7 +162,8 @@ namespace HseClass.Api.Controllers
                             Equipment = task.Description,
                             Id =task.Id,
                             Name = task.Name,
-                            Theme = task.Theme
+                            Theme = task.Theme,
+                            RecommendedClass = task.RecommendedClass
                         }
                     },
                     Solution = s.Solution,
