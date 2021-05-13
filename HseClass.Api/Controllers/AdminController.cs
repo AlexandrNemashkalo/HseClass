@@ -37,6 +37,7 @@ namespace HseClass.Api.Controllers
                 Description = form.Description,
                 Equipment = form.Equipment,
                 Name = form.Name,
+                RecommendedClass = form.RecommendedClass,
                 Theme = form.Theme
                 
             });
@@ -58,6 +59,7 @@ namespace HseClass.Api.Controllers
             t.Equipment = form.Equipment;
             t.Name = form.Name;
             t.Theme = form.Theme;
+            t.RecommendedClass = form.RecommendedClass;
             t.CorrectSolution = form.CorrectSolution;
             
             return  await _taskLabRepository.Update(t);
@@ -97,6 +99,7 @@ namespace HseClass.Api.Controllers
                 Id = t.Id,
                 Name = t.Name,
                 Theme = t.Theme,
+                RecommendedClass = t.RecommendedClass,
                 Description = t.Description,
                 Equipment = t.Equipment
             }).ToList();

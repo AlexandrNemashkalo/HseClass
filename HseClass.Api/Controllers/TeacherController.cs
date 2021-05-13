@@ -282,6 +282,7 @@ namespace HseClass.Api.Controllers
                 Id = t.Id,
                 Name = t.Name,
                 Theme = t.Theme,
+                RecommendedClass = t.RecommendedClass,
                 Description = t.Description,
                 Equipment = t.Equipment
             }).ToList();
