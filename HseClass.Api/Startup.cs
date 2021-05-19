@@ -45,7 +45,7 @@ namespace HseClass.Api
             services.AddDbContext<HseClassContext>(options => 
                     options.UseNpgsql(Configuration.GetConnectionString("PostgresDb"),
                         b => b.MigrationsAssembly("HseClass.Api")),
-                ServiceLifetime.Transient
+                ServiceLifetime.Singleton
             );
 
             services.ConfigureIdentity();
