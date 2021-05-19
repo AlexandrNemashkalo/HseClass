@@ -225,7 +225,9 @@ namespace HseClass.Api.Controllers
             {
                 TaskLabId = form.TaskLabId,
                 Deadline = form.Deadline,
-                ClassRoomId = form.ClassRoomId
+                ClassRoomId = form.ClassRoomId,
+                Title = form.Title,
+                MaxGrade = form.MaxGrade
             });
 
             var usersInClass = await _userRepository.GetByClassId(form.ClassRoomId);
