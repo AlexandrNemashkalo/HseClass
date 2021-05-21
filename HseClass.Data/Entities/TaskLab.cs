@@ -15,6 +15,8 @@ namespace HseClass.Data.Entities
         public string Theme { get; set; }
         
         public string CorrectSolution { get; set; }
+        
+        public string RecommendedClass { get; set; }
 
         public List<Lab> Labs { get; set; } = new List<Lab>();
     }
