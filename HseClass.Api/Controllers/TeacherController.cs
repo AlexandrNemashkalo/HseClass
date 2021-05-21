@@ -225,7 +225,9 @@ namespace HseClass.Api.Controllers
             {
                 TaskLabId = form.TaskLabId,
                 Deadline = form.Deadline,
-                ClassRoomId = form.ClassRoomId
+                ClassRoomId = form.ClassRoomId,
+                Title = form.Title,
+                MaxGrade = form.MaxGrade
             });
 
             var usersInClass = await _userRepository.GetByClassId(form.ClassRoomId);
@@ -267,25 +269,28 @@ namespace HseClass.Api.Controllers
 
             return  await _labRepository.Update(lab);
         }
-        
+
         /// <summary>
         /// Получение всех доступных заданий
         /// </summary>
         /// <returns></returns>
         [HttpGet("taskLab")]
-        public async Task<ActionResult<List<TaskLabViewModel>>> GetTaskLabs()
+        public async Task<ActionResult<TaskLabsViewModel>> GetTaskLabs()
         {
             var tasks = await _taskLab.GetAll();
 
-            return tasks.Select(t => new TaskLabViewModel()
+            return new TaskLabsViewModel()
             {
-                Id = t.Id,
-                Name = t.Name,
-                Theme = t.Theme,
-                RecommendedClass = t.RecommendedClass,
-                Description = t.Description,
-                Equipment = t.Equipment
-            }).ToList();
+                Tasks = tasks.Select(t => new TaskLabViewModel()
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    Theme = t.Theme,
+                    RecommendedClass = t.RecommendedClass,
+                    Description = t.Description,
+                    Equipment = t.Equipment
+                }).ToList()
+            };
         }
 
         /// <summary>

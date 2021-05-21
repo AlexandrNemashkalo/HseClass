@@ -1,0 +1,30 @@
+version: '3.3'
+services:
+
+ postgres:
+  image: "postgres"
+  restart: always
+  environment:
+   POSTGRES_DB: HseClass
+   POSTGRES_USER: hseclass
+   POSTGRES_PASSWORD: hseclass
+   PGDATA: /var/lib/postgresql/data
+  volumes:
+   - "/var/www/postgresql/data:/var/lib/postgresql/data"
+  ports:
+   - "5432:5432"
+ api:
+  depends_on:
+   - "postgres"
+  image: api
+  environment:
+   ASPNETCORE_ENVIRONMENT: Development
+   ASPNETCORE_URLS: "https://+;http://+"
+   ASPNETCORE_HTTPS_PORT: "5555"
+   Kestrel__Certificates__Default__Path: "/https/aspnetapp.pfx"
+   Kestrel__Certificates__Default__Password: "hseclass"
+  ports:
+   - "5555:443"
+   - "5005:80"
+  volumes:
+   - /home/admin/.aspnet/https:/https:ro
