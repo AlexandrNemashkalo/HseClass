@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HseClass.Api.ViewModels
+namespace HseClass.Api.ViewModels.TeacherViewModels
 {
     public class TaskLabsViewModel
     {

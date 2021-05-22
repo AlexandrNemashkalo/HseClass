@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using HseClass.Api.Helpers;
 using HseClass.Api.ViewModels;
+using HseClass.Api.ViewModels.StudentViewModels;
 using HseClass.Core.EF;
 using HseClass.Core.Guard;
 using HseClass.Data.Entities;
@@ -93,7 +94,7 @@ namespace HseClass.Api.Controllers
                 Title = cl.Title,
                 Code = cl.Code,
                 Users = users,
-                Labs = cl.Labs
+                Labs = cl.Labs.Select(x => { x.SolutionLabs = null; return x;}).ToList()
             };
         }
 
@@ -117,6 +118,7 @@ namespace HseClass.Api.Controllers
                 {
                     Id = task.Id,
                     Description = task.Description,
+                    LinkToManual = task.LinkToManual,
                     Equipment = task.Equipment,
                     Name = task.Name,
                     Theme = task.Theme,
@@ -159,7 +161,8 @@ namespace HseClass.Api.Controllers
                         Task = new TaskLabViewModel()
                         {
                             Description = task.Description,
-                            Equipment = task.Description,
+                            Equipment = task.Equipment,
+                            LinkToManual = task.LinkToManual,
                             Id =task.Id,
                             Name = task.Name,
                             Theme = task.Theme,
@@ -250,13 +253,16 @@ namespace HseClass.Api.Controllers
 
             foreach (var lab in cl.Labs)
             {
+                var compareValue = lab.Deadline.CompareTo(DateTime.Now);
+                var status = compareValue < 0 ? LabStatusEnums.Overdue : LabStatusEnums.Assigned;
+                
                 await _solutionLab.Create(new SolutionLab()
                 {
                     DateOfDownload = null,
                     Grade = null,
                     LabId = lab.Id,
                     Solution = null,
-                    Status = LabStatusEnums.Assigned,
+                    Status = status,
                     UserId = addedUser.Id
                 });
             }

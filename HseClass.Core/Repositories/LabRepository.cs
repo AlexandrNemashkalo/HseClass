@@ -22,6 +22,12 @@ namespace HseClass.Core.Repositories
             return await _context.Labs.FirstOrDefaultAsync(l => l.Id == labId);
         }
         
+        public async Task<Lab> GetByIdWithSolutions(int labId)
+        {
+            return await _context.Labs.Include(l => l.SolutionLabs).FirstOrDefaultAsync(l => l.Id == labId);
+        }
+
+        
         public async Task<Lab> Create(Lab lab)
         {
             var result = await _context.Labs.AddAsync(lab);

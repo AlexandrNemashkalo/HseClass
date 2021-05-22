@@ -35,6 +35,7 @@ namespace HseClass.Api.Controllers
             {
                 CorrectSolution = form.CorrectSolution,
                 Description = form.Description,
+                LinkToManual = form.LinkToManual,
                 Equipment = form.Equipment,
                 Name = form.Name,
                 RecommendedClass = form.RecommendedClass,
@@ -57,6 +58,7 @@ namespace HseClass.Api.Controllers
             
             t.Description = form.Description;
             t.Equipment = form.Equipment;
+            t.LinkToManual = form.LinkToManual;
             t.Name = form.Name;
             t.Theme = form.Theme;
             t.RecommendedClass = form.RecommendedClass;
@@ -101,6 +103,7 @@ namespace HseClass.Api.Controllers
                 Theme = t.Theme,
                 RecommendedClass = t.RecommendedClass,
                 Description = t.Description,
+                LinkToManual = t.LinkToManual,
                 Equipment = t.Equipment
             }).ToList();
         }

@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using HseClass.Data.Enums;
+﻿using HseClass.Data.Enums;
 
-namespace HseClass.Api.ViewModels
+namespace HseClass.Api.ViewModels.TeacherViewModels
 {
     public class UserLabForm
     {
