@@ -210,26 +210,9 @@ namespace HseClass.Api.Controllers
             userLab.Solution = form.Solution;
             userLab.DateOfDownload = DateTime.Now;
             userLab.TimeSpan = form.TimeSpan;
-            
-            var filePath = Path.Combine(_environment.WebRootPath, $"{userLab.UserId}-{userLab.LabId}");
-            
-            if (form.Video.Length > 0) 
-            {
-                await using (var stream = System.IO.File.Create(filePath))
-                {
-                    await form.Video.CopyToAsync(stream);
-                }
-            }
+            userLab.VideoPath = form.Video;
 
-            userLab.VideoPath = filePath;
-            
-            
-            
-            if (lab.Deadline > DateTime.Now)
-            {
-                userLab.Status = LabStatusEnums.Completed;
-            }
-            else
+            if (lab.Deadline < DateTime.Now)
             {
                 userLab.Status = LabStatusEnums.Overdue;
             }
