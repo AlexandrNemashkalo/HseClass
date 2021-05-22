@@ -48,10 +48,10 @@ namespace HseClass.Core.EF
             _config = services.GetService<IConfiguration>();
 
             await InitializeRolesAndAdmin();
-            await InitializeTasksLab();
+            //await InitializeTasksLab();
             await InitializeTeacher();
             await InitializeStudent();
-            await InitializeClass();
+            //await InitializeClass();
         }
 
         #region Initializers
