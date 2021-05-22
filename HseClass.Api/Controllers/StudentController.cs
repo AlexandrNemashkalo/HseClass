@@ -198,7 +198,7 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("solution/{labId}")]
-        public async Task<ActionResult<SolutionLab>> UpdateUserLab(int labId, [FromForm] UserLabSolutionForm form)
+        public async Task<ActionResult<SolutionLab>> UpdateUserLab(int labId, [FromBody] UserLabSolutionForm form)
         {
             var lab = await _labRepository.GetById(labId);
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
