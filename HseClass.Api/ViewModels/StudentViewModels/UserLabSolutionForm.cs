@@ -8,6 +8,6 @@ namespace HseClass.Api.ViewModels.StudentViewModels
         
         public string TimeSpan { get; set; }
         
-        public IFormFile Video { get; set; }
+        public string Video { get; set; }
     }
 }
