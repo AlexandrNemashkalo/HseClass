@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace HseClass.Api.ViewModels
+namespace HseClass.Api.ViewModels.TeacherViewModels
 {
     public class LabForm
     {

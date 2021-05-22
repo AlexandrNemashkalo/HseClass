@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HseClass.Api.Helpers;
 using HseClass.Api.ViewModels;
+using HseClass.Api.ViewModels.TeacherViewModels;
 using HseClass.Core.Guard;
 using HseClass.Data.Entities;
 using HseClass.Data.Enums;
@@ -233,7 +234,7 @@ namespace HseClass.Api.Controllers
             var usersInClass = await _userRepository.GetByClassId(form.ClassRoomId);
             foreach (var us in usersInClass)
             {
-                if (await _userManager.IsInRoleAsync(user, "teacher"))
+                if (await _userManager.IsInRoleAsync(us, "teacher"))
                 {
                     continue;
                 }
@@ -288,7 +289,8 @@ namespace HseClass.Api.Controllers
                     Theme = t.Theme,
                     RecommendedClass = t.RecommendedClass,
                     Description = t.Description,
-                    Equipment = t.Equipment
+                    Equipment = t.Equipment,
+                    LinkToManual = t.LinkToManual
                 }).ToList()
             };
         }
@@ -321,13 +323,33 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("lab/{labId}/user")]
-        public async Task<ActionResult<List<SolutionLab>>> GetUserLabs(int labId)
+        public async Task<ActionResult<TeacherLabInfo>> GetUserLabs(int labId)
         {
-            var lab = await _labRepository.GetById(labId);
+            var lab = await _labRepository.GetByIdWithSolutions(labId);
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             await this.CheckUserInClass(user, lab.ClassRoomId);
-            
-            return await _solutionLab.GetByLabId(labId);
+
+            var task = await _taskLab.GetById(lab.TaskLabId);
+            return new TeacherLabInfo()
+            {
+                ClassRoomId = lab.ClassRoomId,
+                Deadline = lab.Deadline,
+                Id = lab.Id,
+                MaxGrade = lab.MaxGrade,
+                Solutions = lab.SolutionLabs,
+                Task = new TeacherTaskLabViewModel()
+                {
+                    Id = task.Id,
+                    Description = task.Description,
+                    LinkToManual = task.LinkToManual,
+                    Equipment = task.Equipment,
+                    Name = task.Name,
+                    Theme = task.Theme,
+                    RecommendedClass = task.RecommendedClass,
+                    CorrectSolution = task.CorrectSolution
+                },
+                Title = lab.Title
+            };
         }
         
         /// <summary>

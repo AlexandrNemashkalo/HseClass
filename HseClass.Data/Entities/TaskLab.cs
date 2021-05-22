@@ -16,6 +16,8 @@ namespace HseClass.Data.Entities
         
         public string CorrectSolution { get; set; }
         
+        public string LinkToManual { get; set; }
+        
         public string RecommendedClass { get; set; }
 
         public List<Lab> Labs { get; set; } = new List<Lab>();

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using HseClass.Data.Entities;
 
 namespace HseClass.Api.ViewModels
@@ -30,6 +29,8 @@ namespace HseClass.Api.ViewModels
         public string RecommendedClass { get; set; }
         
         public string Equipment { get; set; }
+        
+        public string LinkToManual { get; set; }
         
         public string Name { get; set; }
         

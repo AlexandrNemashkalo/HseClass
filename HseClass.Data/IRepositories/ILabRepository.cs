@@ -15,5 +15,6 @@ namespace HseClass.Data.IRepositories
         Task<Lab> Update(Lab lab);
         
         Task<Lab> GetById(int labId);
+        Task<Lab> GetByIdWithSolutions(int labId);
     }
 }

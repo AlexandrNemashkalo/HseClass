@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using HseClass.Api.ViewModels;
+using HseClass.Api.ViewModels.AuthViewModels;
 using HseClass.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 

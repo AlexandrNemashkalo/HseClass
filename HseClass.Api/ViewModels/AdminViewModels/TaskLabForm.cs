@@ -8,6 +8,8 @@
         
         public string Equipment { get; set; }
         
+        public string LinkToManual { get; set; }
+        
         public string Name { get; set; }
         
         public string Theme { get; set; }

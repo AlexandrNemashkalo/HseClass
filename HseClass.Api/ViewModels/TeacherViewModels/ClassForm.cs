@@ -1,4 +1,4 @@
-﻿namespace HseClass.Api.ViewModels
+﻿namespace HseClass.Api.ViewModels.TeacherViewModels
 {
     public class ClassForm
     {

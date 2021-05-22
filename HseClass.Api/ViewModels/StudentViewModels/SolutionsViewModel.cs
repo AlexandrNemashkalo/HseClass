@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using HseClass.Data.Entities;
 using HseClass.Data.Enums;
 
-namespace HseClass.Api.ViewModels
+namespace HseClass.Api.ViewModels.StudentViewModels
 {
     public class SolutionsViewModel
     {

@@ -93,6 +93,11 @@ namespace HseClass.Core.EF
 
         private static async Task InitializeTasksLab()
         {
+            if ((await _taskLab.GetAll()).Count > 0)
+            {
+                return;
+            }
+            
             await _taskLab.Create(new TaskLab()
             {
                 CorrectSolution = "9.88",
@@ -100,7 +105,8 @@ namespace HseClass.Core.EF
                 Equipment = "Штатив с муфтой и лапкой, лента измерительная, циркуль, динамометр лабораторный, весы с разновесами, шарик на нити, кусочек пробки с отверстием, лист бумаги, линейка",
                 Theme = "Механика",
                 Name = "Изучение движения тел по окружности под действием силы упругости и тяжести",
-                RecommendedClass = "2 курс"
+                RecommendedClass = "2 курс",
+                LinkToManual = "https://www.hse.ru/data/2016/08/19/1118739240/%D0%9B%D0%A0%20%E2%84%96%200.pdf"
             });
             
             await _taskLab.Create(new TaskLab()
@@ -110,7 +116,8 @@ namespace HseClass.Core.EF
                 Equipment = "Источник тока, два проволочных резистора, амперметр, вольтметр, реостат",
                 Theme = "Электричество",
                 Name = "Изучение последовательного и параллельного соединения проводников",
-                RecommendedClass = "1 курс"
+                RecommendedClass = "1 курс",
+                LinkToManual = "https://miem.hse.ru/data/2016/08/19/1118738631/%D0%9B%D0%A0%20%E2%84%96%201.pdf"
             });
             
             await _taskLab.Create(new TaskLab()
@@ -120,7 +127,8 @@ namespace HseClass.Core.EF
                 Equipment = "Штатив с муфтой и лапкой,груз, нить, секундомер",
                 Theme = "Механика",
                 Name = "Определение ускорения свободного падения при помощи нитяного маятника",
-                RecommendedClass = "3 курс"
+                RecommendedClass = "3 курс",
+                LinkToManual = "https://miem.hse.ru/data/2016/12/22/1112060906/%D0%9B%D0%A0%20%20%E2%84%96%2021.pdf"
             });
         }
 
