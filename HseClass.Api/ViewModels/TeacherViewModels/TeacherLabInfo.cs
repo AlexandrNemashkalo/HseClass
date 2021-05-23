@@ -18,6 +18,6 @@ namespace HseClass.Api.ViewModels.TeacherViewModels
         
         public DateTime Deadline { get; set; }
         
-        public List<SolutionLab> Solutions { get; set; }
+        public List<TeacherLabSolutionViewModel> Solutions { get; set; }
     }
 }

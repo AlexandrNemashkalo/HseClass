@@ -330,13 +330,34 @@ namespace HseClass.Api.Controllers
             await this.CheckUserInClass(user, lab.ClassRoomId);
 
             var task = await _taskLab.GetById(lab.TaskLabId);
+
+
+            var solutions = new List<TeacherLabSolutionViewModel>();
+            foreach (var s in lab.SolutionLabs)
+            {
+                var u = await _userManager.FindByIdAsync(s.UserId.ToString());
+                solutions.Add(new TeacherLabSolutionViewModel()
+                {
+                    DateOfDownload = s.DateOfDownload,
+                    Grade = s.Grade,
+                    LabId = s.LabId,
+                    Solution = s.Solution,
+                    Status = s.Status,
+                    TimeSpan = s.TimeSpan,
+                    UserEmail = u.Email,
+                    UserId = u.Id,
+                    UserName = u.Name,
+                    VideoPath = s.VideoPath
+                });
+            }
+            
             return new TeacherLabInfo()
             {
                 ClassRoomId = lab.ClassRoomId,
                 Deadline = lab.Deadline,
                 Id = lab.Id,
                 MaxGrade = lab.MaxGrade,
-                Solutions = lab.SolutionLabs,
+                Solutions = solutions,
                 Task = new TeacherTaskLabViewModel()
                 {
                     Id = task.Id,
