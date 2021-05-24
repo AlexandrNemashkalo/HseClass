@@ -28,7 +28,7 @@ services:
    - "5005:80"
   volumes:
    - /home/admin/.aspnet/https:/https:ro
-  front:
+ front:
    image: front
    depends_on:
     - api
