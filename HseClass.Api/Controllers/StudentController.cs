@@ -57,9 +57,38 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("class")]
-        public async Task<ActionResult<List<ClassRoom>>> Get()
+        public async Task<ActionResult<List<StudentClassViewModel>>> Get()
         {
-            return await _classRoomRepository.GetByUserId(this.GetUserIdFromToken());
+            var classes= await _classRoomRepository.GetByUserId(this.GetUserIdFromToken());
+
+            var result = new List<StudentClassViewModel>();
+            foreach (var cl in classes)
+            {
+
+                var user = new User();
+                foreach (var uc in cl.UserClasses)
+                {
+                    user = await _userRepository.GetById(uc.UserId);
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    if (roles.Any(r => r == "teacher"))
+                    {
+                        break;
+                    }
+                }
+                result.Add(new StudentClassViewModel()
+                {
+                    Code = cl.Code,
+                    Id = cl.Id,
+                    Labs = cl.Labs,
+                    UserClasses = cl.UserClasses,
+                    Title = cl.Title,
+                    TeacherEmail = user.Email,
+                    TeacherName = user.Name
+                });
+            }
+
+            return result;
         }
         
         /// <summary>
