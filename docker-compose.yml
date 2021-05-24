@@ -36,3 +36,5 @@ services:
     - "2000:2000"
    volumes:
     - /home/admin/.aspnet/https:/https:ro
+    - /etc/ssl/localhost.crt:/app/localhost.crt:ro
+    - /etc/ssl/localhost.key:/app/localhost.key:ro
