@@ -100,7 +100,7 @@ namespace HseClass.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("class/{classId}")]
-        public async Task<ActionResult<ClassInfoViewModel>> Get(int classId)
+        public async Task<ActionResult<StudentClassInfoViewModel>> Get(int classId)
         {
             var user = await _userRepository.GetById(this.GetUserIdFromToken());
             await this.CheckUserInClass(user, classId);
@@ -121,13 +121,30 @@ namespace HseClass.Api.Controllers
                 });
             }
 
-            return new ClassInfoViewModel()
+            
+            return new StudentClassInfoViewModel()
             {
                 Id = cl.Id,
                 Title = cl.Title,
                 Code = cl.Code,
                 Users = users,
-                Labs = cl.Labs.Select(x => { x.SolutionLabs = null; return x;}).ToList()
+                Labs =  cl.Labs.Select(  (x) =>
+                {
+                    var a =  _solutionLab.GetById(user.Id, x.Id);
+                    a.Wait();
+               
+                    return new StudentLabInfoViewModel()
+                    {
+                        ClassRoomId = x.ClassRoomId,
+                        Deadline = x.Deadline,
+                        Id = x.Id,
+                        MaxGrade = x.MaxGrade,
+                        SolutionLabs = null,
+                        Title = x.Title,
+                        TaskLabId = x.TaskLabId,
+                        MySolution = a.Result
+                    };
+                }).ToList()
             };
         }
 
