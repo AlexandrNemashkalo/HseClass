@@ -1,0 +1,111 @@
+
+html, body {margin: 0px}
+
+a{
+  text-decoration:none;
+}
+.mainContainer{
+  position: absolute;
+  text-align: center;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 300px;
+  z-index: 100;
+
+  .mainTitle{
+    font-size: 40px;
+  }
+
+  button{
+    width: 400px;
+  }
+
+}
+
+.mainImg{
+  position: fixed;
+  bottom: -60px;
+
+  img{
+    max-width: 40%;
+  }
+}
+
+.signinContainer{
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 35% ;
+  height: 100vh;
+  border-radius: 0px;
+  text-align: center;
+
+  .formCard{
+    border-radius: 0px;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 300px;
+    z-index: 100;
+    padding-left:60px;
+    padding-right:60px
+  }
+}
+
+.regContainer{
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 35% ;
+  height: 100vh;
+  border-radius: 0px;
+  text-align: center;
+
+  .formCard{
+    border-radius: 0px;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 400px;
+    z-index: 100;
+    padding-left:60px;
+    padding-right:60px
+  }
+}
+
+.search{
+  margin-left: auto;
+  margin-right: 270px;
+}
+.searchInput{
+  max-width: 500px;
+  min-width: 400px;
+}
+
+
+#create .speed-dial {
+  position: absolute;
+}
+
+#create .btn--floating {
+  position: relative;
+}
+
+
+
+
+
+@import 'media';
+
+
