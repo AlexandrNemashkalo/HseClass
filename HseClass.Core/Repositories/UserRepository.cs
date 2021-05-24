@@ -30,9 +30,7 @@ namespace HseClass.Core.Repositories
             var query =
                 from c in _context.Users 
                 join p in _context.UserClasses
-                    on c.Id equals p.ClassRoomId
-                join u in _context.ClassRooms
-                    on p.UserId equals u.Id
+                    on c.Id equals p.UserId
                 where p.ClassRoomId == classId
                 select c;
 
