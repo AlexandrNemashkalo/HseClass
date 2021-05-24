@@ -65,17 +65,21 @@ namespace HseClass.Api.Controllers
             foreach (var cl in classes)
             {
 
-                var user = new User();
+                string teacherName= "";
+                string teacherEmail ="";
                 foreach (var uc in cl.UserClasses)
                 {
-                    user = await _userRepository.GetById(uc.UserId);
+                    var user = await _userRepository.GetById(uc.UserId);
                     var roles = await _userManager.GetRolesAsync(user);
 
                     if (roles.Any(r => r == "teacher"))
                     {
+                        teacherEmail = user.Email;
+                        teacherName = user.Name;
                         break;
                     }
                 }
+                
                 result.Add(new StudentClassViewModel()
                 {
                     Code = cl.Code,
@@ -83,8 +87,8 @@ namespace HseClass.Api.Controllers
                     Labs = cl.Labs,
                     UserClasses = cl.UserClasses,
                     Title = cl.Title,
-                    TeacherEmail = user.Email,
-                    TeacherName = user.Name
+                    TeacherEmail = teacherEmail,
+                    TeacherName =  teacherName
                 });
             }
 

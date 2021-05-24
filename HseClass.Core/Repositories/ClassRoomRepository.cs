@@ -40,12 +40,10 @@ namespace HseClass.Core.Repositories
                 from c in _context.ClassRooms 
                 join p in _context.UserClasses
                     on c.Id equals p.ClassRoomId
-                join u in _context.Users
-                    on p.UserId equals u.Id
                 where p.UserId == userId
                 select c;
 
-            return await query.ToListAsync();
+            return await query.Include(c => c.UserClasses).ToListAsync();
         }
 
         public async Task<ClassRoom> GetById(int classId)
