@@ -28,3 +28,11 @@ services:
    - "5005:80"
   volumes:
    - /home/admin/.aspnet/https:/https:ro
+  front:
+   image: front
+   depends_on:
+    - api
+   ports:
+    - "2000:2000"
+   volumes:
+    - /home/admin/.aspnet/https:/https:ro

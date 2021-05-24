@@ -1,0 +1,104 @@
+@media screen and (max-width: 960PX){
+  .mainContainer{
+    height: 300px;
+
+    .mainTitle{
+      font-size: 30px;
+    }
+  }
+
+
+  .signinContainer{
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 350px;
+    width: 350px;
+
+    .formCard{
+      position: static;
+      padding-left:10px;
+      padding-right:10px
+    }
+  }
+
+  .regContainer{
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 400px;
+    width: 350px;
+
+    .formCard{
+      position: static;
+      padding-left:10px;
+      padding-right:10px
+    }
+  }
+
+  .search{
+    margin-right: 0px;
+  }
+}
+
+
+
+
+
+@media screen and (max-width: 600PX){
+  .mainContainer{
+    height: 300px;
+
+    .mainTitle{
+      font-size: 30px;
+    }
+
+    button{
+      width: 300px;
+    }
+  }
+
+  .mainImg{
+    img{
+      max-width: 60%;
+    }
+  }
+
+  .myTab{
+    font-size: 12px;
+  }
+
+  .searchInput{
+    max-width: 400px;
+    min-width: 300px;
+  }
+
+
+
+}
+
+@media screen and (max-width: 500PX){
+
+  .myTab{
+    font-size: 8px;
+    padding: 0px;
+    margin: 0px;
+    min-width: 50px;
+
+  }
+
+  .searchInput{
+    max-width: 400px;
+    min-width: 200px;
+  }
+
+
+
+
+}
