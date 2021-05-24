@@ -23,7 +23,7 @@ const vuexLocalStorage = new VuexPersist({
 export default new Vuex.Store({
   state: {
     isDark:false,
-    port: "https://localhost:5001/api/",  //"https://hse-class.ru/api/"
+    port: "https://hse-class.ru/api/",  // https://localhost:5001/api/
     token:null,
     windowWidth:null,
     user:{
