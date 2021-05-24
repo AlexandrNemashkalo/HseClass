@@ -205,6 +205,7 @@ namespace HseClass.Api.Controllers
                     Lab = new LabInfo()
                     {
                         ClassRoomId = lab.ClassRoomId,
+                        Title = lab.Title,
                         Deadline = lab.Deadline,
                         Id =lab.Id,
                         MaxGrade = lab.MaxGrade,
