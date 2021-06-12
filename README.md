@@ -10,11 +10,11 @@ API для миниклассрума
 
 ![swagger](https://github.com/AlexandrNemashkalo/HseClass/blob/master/screens/3.jpg)
 
-## страница класса
+## Страница класса
 
 ![swagger](https://github.com/AlexandrNemashkalo/HseClass/blob/master/screens/5.jpg)
 
-## страница задания в темной теме
+## Страница задания в темной теме
 
 ![swagger](https://github.com/AlexandrNemashkalo/HseClass/blob/master/screens/10.jpg)
 
